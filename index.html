@@ -37,6 +37,7 @@
   --wa:#25D366;--wa-dark:#128C7E;
   --shadow:0 4px 24px rgba(26,26,26,0.08);
   --shadow-hover:0 12px 40px rgba(26,26,26,0.16);
+  --text3:rgba(255,255,255,.38);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Montserrat',sans-serif;background:var(--warm-white);color:var(--charcoal);font-size:13px;letter-spacing:.02em;}
@@ -101,7 +102,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--warm-white);border-bottom
 /* IMAGE SLIDER */
 .img-slider{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--cream);cursor:zoom-in;}
 .img-slider-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1);}
-.slider-img{min-width:100%;height:100%;object-fit:cover;flex-shrink:0;}
+.slider-img{min-width:100%;height:100%;/* object-fit:cover; */flex-shrink:0;}
 .slider-img.error-fallback{display:flex;align-items:center;justify-content:center;font-size:52px;min-width:100%;height:100%;background:var(--cream);}
 .slider-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.88);border:none;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--charcoal);transition:background .2s;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.15);}
 .slider-btn:hover{background:white;}
@@ -288,7 +289,7 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--charcoal);color:white;font-size:12px;font-weight:500;letter-spacing:.06em;padding:12px 24px;border-radius:40px;box-shadow:0 8px 32px rgba(0,0,0,.2);z-index:600;transition:transform .3s cubic-bezier(.4,0,.2,1);pointer-events:none;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 #loadingBanner{display:none;text-align:center;padding:40px;color:var(--muted);font-family:'Cormorant Garamond',serif;font-size:20px;}
-
+.cdot{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);display:inline-block;flex-shrink:0}
 @media(max-width:768px){
   .footer-main{grid-template-columns:1fr 1fr;gap:26px;padding:34px 22px 26px;}
   .footer-main>div:first-child{grid-column:1/-1;}
@@ -421,6 +422,36 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
   font-size: 12px;
   color: #d32f2f;
 }
+
+/* ── Variant Matrix ── */
+.vm-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;min-height:4px}
+.vm-entry{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;transition:border-color .15s}
+.vm-entry:hover{border-color:var(--border2)}
+.vm-swatch{width:24px;height:24px;border-radius:6px;border:1.5px solid rgba(255,255,255,.22);flex-shrink:0}
+.vm-color-info{flex-shrink:0;min-width:130px}
+.vm-color-name{font-size:13px;font-weight:600;color:var(--text)}
+.vm-color-hex{font-size:11px;color:var(--gold);font-family:monospace}
+.vm-arrow{color:var(--text3);font-size:14px;flex-shrink:0}
+.vm-sizes{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+.vm-size-chip{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:2px 9px;font-size:12px;color:var(--text2)}
+.vm-del{background:none;border:none;color:var(--red);cursor:pointer;font-size:17px;line-height:1;padding:3px 6px;border-radius:4px;transition:.15s;flex-shrink:0}
+.vm-del:hover{background:rgba(231,76,60,.15)}
+.vm-add-row{display:flex;flex-direction:column;gap:10px}
+.vm-add-top{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center}
+.vm-color-select-wrap{display:flex;align-items:center;gap:8px}
+.vm-color-select-wrap .form-select{flex:1;min-width:0}
+.vm-color-preview{width:28px;height:28px;border-radius:6px;border:1.5px solid rgba(255,255,255,.22);flex-shrink:0;display:inline-block;background:#888;transition:background .15s}
+.vm-size-checks-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px}
+.vm-size-checks-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.vm-size-checks-grid{display:flex;flex-wrap:wrap;gap:6px;min-height:20px}
+.vm-size-pill{display:inline-flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:3px 10px;cursor:pointer;font-size:12px;color:var(--text2);transition:.15s;user-select:none}
+.vm-size-pill:hover{border-color:var(--gold-border);color:var(--text)}
+.vm-size-pill.checked{background:var(--gold-dim);border-color:var(--gold-border);color:var(--gold);font-weight:600}
+.vm-size-pill input[type=checkbox]{display:none}
+.vm-checks-empty{color:var(--text3);font-size:12px;font-style:italic}
+.vm-add-row .form-input{min-width:0}
+.vm-empty{color:var(--text3);font-size:12px;font-style:italic;padding:8px 0}
+.vm-hint{font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -521,7 +552,7 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
 
 <div class="sidebar" id="cartSidebar">
-  <div class="sidebar-header"><h2>Your Cart</h2><button class="close-btn" onclick="closeCart()">&#x2715;</button></div>
+  <div class="sidebar-header"><h2>Your Cart<button class="remove-item" onclick="emptyCart()" style="margin-left:10px;color:red;">[Remove All]</button></h2><button class="close-btn"  onclick="closeCart()">&#x2715;</button></div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer">
     <div class="cart-total"><span class="cart-total-label">Total</span><span class="cart-total-amount" id="cartTotal">$0.00</span></div>
@@ -684,6 +715,10 @@ function parseCSV(text) {
 }
 
 function csvToProducts(rows) {
+  const s = (v) => ((v||'')+'').trim();
+  const pipe = (v) => s(v) ? s(v).split('|').map(x=>x.trim()).filter(Boolean) : [];
+  const nl = (v) => s(v) ? s(v).split('\n').map(x=>x.trim()).filter(Boolean) : [];
+
   return rows.map(r => ({
     id:       parseInt(r.id) || 0,
     code:     r.code || '',
@@ -693,11 +728,20 @@ function csvToProducts(rows) {
     tag:      r.tag || '',
     desc:     r.description || '',
     images:   (r.images || '').split('\n').map(u => u.trim()).filter(Boolean),
-	colors: (r.colors || '').split('|').map(x=>x.trim()).filter(Boolean),
-	sizes: (r.sizes || '').split('|').map(x=>x.trim()).filter(Boolean),
-	types: (r.types || '').split('|').map(x=>x.trim()).filter(Boolean),
-	weights: (r.weights || '').split('|').map(x=>x.trim()).filter(Boolean),
+	colors: pipe(r.colors),
+	sizes: pipe(r.sizes),
+	types: pipe(r.types),
+	weights: pipe(r.weights),
+	variantMatrix: r.variant_matrix ? parseVariantMatrix(s(r.variant_matrix)) : []
   }));
+}
+
+function serializeVariantMatrix(matrix) {
+  if (!matrix || !matrix.length) return '';
+  return matrix.map(e => {
+    const cp = e.colorName ? `${e.color}~${e.colorName}` : e.color;
+    return `${cp}:${e.sizes.join('|')}`;
+  }).join(';');
 }
 
 // ═══════ LOAD DATA ═══════
@@ -709,8 +753,9 @@ async function loadProducts() {
     const text = await res.text();
     const rows = parseCSV(text);
     products = csvToProducts(rows);
-  } catch(e) {
+  } catch(e) {     
     // Fallback inline data so site always works
+	console.log(e);
     products = FALLBACK_PRODUCTS;
   }
   document.getElementById('loadingBanner').style.display = 'none';
@@ -744,6 +789,25 @@ function updateCategoryUI(cat) {
   });
 }
 
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function parseVariantMatrix(str) {
+  if (!str || !str.trim()) return [];
+  return str.split(';').map(entry => {
+    const colonIdx = entry.indexOf(':');
+    if (colonIdx < 0) return null;
+    const colorPart = entry.slice(0, colonIdx).trim();
+    const sizesPart = entry.slice(colonIdx + 1).trim();
+    const tildeIdx = colorPart.indexOf('~');
+    const hex = tildeIdx >= 0 ? colorPart.slice(0, tildeIdx).trim() : colorPart;
+    const colorName = tildeIdx >= 0 ? colorPart.slice(tildeIdx + 1).trim() : '';
+    const sizes = sizesPart.split('|').map(s => s.trim()).filter(Boolean);
+    return { color: hex, colorName, sizes };
+  }).filter(e => e && e.color && e.sizes.length > 0);
+}
+
 function renderVariantOptions(p){
   let blocks = [];
 
@@ -762,6 +826,22 @@ function renderVariantOptions(p){
           `).join('')}
         </div>
       </div>
+	  ${p.variantMatrix.length?`<div class="variant-group" style="font-size:12px;color:var(--text2)">`:``}
+	  ${p.variantMatrix.length?`<div class="variant-label">Limited Stock:</div>`:``}
+	  ${p.variantMatrix.map((e, i) => `
+      <div class="vm-entry">
+        <span class="vm-swatch" style="background:${esc(e.color)};" title="${esc(e.color)}"></span>
+        <div class="vm-color-info">
+          <div class="vm-color-name">${esc(e.colorName || e.color)}</div>
+          <div class="vm-color-hex">${esc(e.color)}</div>
+        </div>
+        <span class="vm-arrow">&#8594;</span>
+        <div class="vm-sizes">
+          ${e.sizes.map(s => `<span class="vm-size-chip">${esc(s)}</span>`).join('')}
+        </div>
+      </div>
+    `).join('')}
+	  ${p.variantMatrix.length?`</div>`:``}
     `;
   }
   // Hidden fields
@@ -1008,6 +1088,31 @@ function addToCart(id) {
 	}
 	return false;
   }
+  // TODO: Check if available combination of stock is selected
+  alert(JSON.stringify(p.variantMatrix));
+  if(p.variantMatrix && p.variantMatrix.length) {
+	if(p.colors && p.colors.length) {	   
+		if(p.sizes && p.sizes.length) {
+		    for(let i = 0; i < p.variantMatrix.length; i++) {
+			    let variant = p.variantMatrix[i];
+			    if(color === variant.color) {
+				    let sizeAvailable = false;
+					for(let j = 0; j < variant.sizes.length; j++) {
+						if(size === variant.sizes[j]) {
+						   sizeAvailable = true;
+						   break;
+						}
+					}
+					if(!sizeAvailable) {
+					    const errorMessageEle = document.querySelector('.variant-error');
+						errorMessageEle.textContent = 'Please choose the available stock.';
+						return false;
+					}
+				}
+		    }
+		}
+	}
+  }
   cart.push({
 	  ...p,
 	  uuid: generateUUID(),
@@ -1071,9 +1176,10 @@ function changeQty(uuid, d) {
   if (item.qty <= 0) cart = cart.filter(x => x.uuid !== uuid);
   updateBadge(); renderCart();
 }
+function emptyCart() { cart = []; updateBadge(); renderCart(); localStorage.setItem('cart', JSON.stringify(cart));}
 function removeItem(uuid) { cart = cart.filter(x => x.uuid !== uuid); updateBadge(); renderCart(); localStorage.setItem('cart', JSON.stringify(cart));}
-function openCart() { renderCart(); document.getElementById('cartSidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
-function closeCart() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+function openCart() { renderCart(); document.getElementById('cartSidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); document.querySelector('.wa-float').style.visibility = 'hidden';}
+function closeCart() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); document.querySelector('.wa-float').style.visibility = 'visible'; }
 
 // ═══════ WHATSAPP BUY NOW ═══════
 function buyNowWhatsApp() {
