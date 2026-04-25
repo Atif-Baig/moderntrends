@@ -168,8 +168,8 @@ nav{position:sticky;top:0;z-index:100;background:var(--warm-white);border-bottom
 .pm-img-col{width:48%;flex-shrink:0;position:relative;background:var(--cream);}
 .pm-slider{width:100%;height:100%;display:flex;flex-direction:column;}
 .pm-slider-track-wrap{flex:1;overflow:hidden;position:relative;}
-.pm-slider-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1);}
-.pm-slide-img{width:100%;height:100%;object-fit:cover;flex-shrink:0;}
+.pm-slider-track{display:flex;height:100%;transition:transform .4s cubic-bezier(.4,0,.2,1);cursor: zoom-in;}
+.pm-slide-img{width:100%;height:100%;/*object-fit:cover*/;flex-shrink:0;}
 .pm-slide-img.fallback{display:flex;align-items:center;justify-content:center;font-size:80px;min-width:100%;height:100%;background:var(--cream);}
 .pm-slider-thumbs{display:flex;gap:6px;padding:8px;background:rgba(26,26,26,.06);overflow-x:auto;}
 .pm-thumb{width:44px;height:44px;border-radius:2px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:border-color .2s;flex-shrink:0;}
@@ -452,6 +452,28 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 .vm-add-row .form-input{min-width:0}
 .vm-empty{color:var(--text3);font-size:12px;font-style:italic;padding:8px 0}
 .vm-hint{font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5}
+
+.no-scroll {
+  overflow: hidden;
+  height: 100vh; /* Optional: ensures the body height is locked to viewport */
+}
+#overlay-img-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index:1000;
+}
+
+#overlay-img-container img {
+  max-width: 90%;
+  max-height: 90%;
+}
 </style>
 </head>
 <body>
@@ -550,9 +572,11 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 </footer>
 
 <div class="overlay" id="overlay" onclick="closeCart()"></div>
-
+<div id="overlay-img-container" onclick="closeImagePreview()">
+  <img id="overlay-img">
+</div>
 <div class="sidebar" id="cartSidebar">
-  <div class="sidebar-header"><h2>Your Cart<button class="remove-item" onclick="emptyCart()" style="margin-left:10px;color:red;">[Remove All]</button></h2><button class="close-btn"  onclick="closeCart()">&#x2715;</button></div>
+  <div class="sidebar-header"><h2>Your Cart<button class="remove-item" onclick="emptyCart()" style="margin-left:10px;color:red;">[Remove All]</button><button class="remove-item" onclick="closeCart()" style="margin-left:10px;color:green;">[Continue Shopping]</button></h2><button class="close-btn"  onclick="closeCart()">&#x2715;</button></div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer">
     <div class="cart-total"><span class="cart-total-label">Total</span><span class="cart-total-amount" id="cartTotal">$0.00</span></div>
@@ -712,6 +736,29 @@ function parseCSV(text) {
     headers.forEach((h, idx) => { obj[h] = (row[idx] || '').trim(); });
     return obj;
   });
+}
+
+function openImagePreview(src) {
+  const overlay = document.getElementById("overlay-img-container");
+  const img = document.getElementById("overlay-img");
+
+  img.src = src;
+  overlay.style.display = "flex";
+  enableScroll(false);
+}
+
+function closeImagePreview() {
+  document.getElementById("overlay-img-container").style.display = "none";
+  enableScroll(true);
+}
+
+function enableScroll(enableFlag) {
+    const body = document.querySelector('body');
+    if(enableFlag) {
+		body.classList.remove('no-scroll');
+	} else {
+		body.classList.add('no-scroll');
+	}
 }
 
 function csvToProducts(rows) {
@@ -955,7 +1002,7 @@ function renderProducts() {
     return `<div class="product-card">
       ${p.tag ? `<div class="product-tag">${p.tag}</div>` : ''}
       <div class="product-code-badge">${p.code}</div>
-      <div class="img-slider" id="tile-slider-${p.id}" onclick="openProductModal(${p.id})" title="View details">
+      <div class="img-slider" id="tile-slider-${p.id}" title="View details">
         ${sliderHtml}
       </div>
       <div class="product-info">
@@ -981,7 +1028,7 @@ function buildTileSlider(p) {
     return `<span style="font-size:52px;">${CAT_EMOJI[p.category] || '&#128717;'}</span>`;
   }
   const imgs = p.images.map((url, i) =>
-    `<img class="slider-img" src="${url}" alt="${p.name} view ${i+1}" loading="lazy" onerror="this.style.display='none'">`
+    `<img class="slider-img" src="${url}" alt="${p.name} view ${i+1}" loading="lazy" onclick="openImagePreview(this.src)" onerror="this.style.display='none'">`
   ).join('');
   const dots = p.images.length > 1
     ? `<div class="slider-dots">${p.images.map((_,i) => `<div class="slider-dot${i===0?' active':''}" data-i="${i}"></div>`).join('')}</div>`
@@ -1176,8 +1223,8 @@ function changeQty(uuid, d) {
 }
 function emptyCart() { cart = []; updateBadge(); renderCart(); localStorage.setItem('cart', JSON.stringify(cart));}
 function removeItem(uuid) { cart = cart.filter(x => x.uuid !== uuid); updateBadge(); renderCart(); localStorage.setItem('cart', JSON.stringify(cart));}
-function openCart() { renderCart(); document.getElementById('cartSidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); document.querySelector('.wa-float').style.visibility = 'hidden';}
-function closeCart() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); document.querySelector('.wa-float').style.visibility = 'visible'; }
+function openCart() { renderCart(); document.getElementById('cartSidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); document.querySelector('.wa-float').style.visibility = 'hidden'; enableScroll(false); }
+function closeCart() { document.getElementById('cartSidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); document.querySelector('.wa-float').style.visibility = 'visible'; enableScroll(true); }
 
 // ═══════ WHATSAPP BUY NOW ═══════
 function buyNowWhatsApp() {
@@ -1220,7 +1267,7 @@ function openProductModal(id) {
   const track = document.getElementById('pmSliderTrack');
   const thumbs = document.getElementById('pmThumbs');
   track.innerHTML = pmImages.length
-    ? pmImages.map((url, i) => `<img class="pm-slide-img" src="${url}" alt="${p.name} image ${i+1}" loading="lazy" onerror="this.style.display='none'">`).join('')
+    ? pmImages.map((url, i) => `<img class="pm-slide-img" src="${url}" alt="${p.name} image ${i+1}" loading="lazy" onclick="openImagePreview(this.src)" onerror="this.style.display='none'">`).join('')
     : `<div class="pm-slide-img fallback" style="font-size:80px;">${CAT_EMOJI[p.category] || '&#128717;'}</div>`;
   track.style.transform = 'translateX(0%)';
 
@@ -1241,6 +1288,7 @@ function openProductModal(id) {
   const btn = document.getElementById('pmAddBtn');
   btn.textContent = 'Add to Cart'; btn.style.background = '';
   document.getElementById('productModalOverlay').classList.add('show');
+  enableScroll(false);
 }
 
 function pmSlide(dir) {
@@ -1275,13 +1323,13 @@ function addToCartFromModal() {
   openCart();
 }
 
-function closeProductModal() { document.getElementById('productModalOverlay').classList.remove('show'); currentModalId = null; }
+function closeProductModal() { document.getElementById('productModalOverlay').classList.remove('show'); currentModalId = null; enableScroll(true);}
 function closeProductModalOnBg(e) { if (e.target === document.getElementById('productModalOverlay')) closeProductModal(); }
 
 // ═══════ INFO DIALOGS ═══════
-function openContactDialog() { document.getElementById('contactOverlay').classList.add('show'); }
-function openAboutDialog()   { document.getElementById('aboutOverlay').classList.add('show'); }
-function closeInfo(id) { document.getElementById(id).classList.remove('show'); }
+function openContactDialog() { document.getElementById('contactOverlay').classList.add('show'); enableScroll(false); }
+function openAboutDialog()   { document.getElementById('aboutOverlay').classList.add('show'); enableScroll(false); }
+function closeInfo(id) { document.getElementById(id).classList.remove('show'); enableScroll(true); }
 function closeInfoOnBg(e, id) { if (e.target === document.getElementById(id)) closeInfo(id); }
 
 // ═══════ POLICIES ═══════
@@ -1346,8 +1394,9 @@ function openPolicy(type) {
   document.getElementById('policyBody').innerHTML = p.body;
   document.getElementById('policyBody').scrollTop = 0;
   document.getElementById('policyOverlay').classList.add('show');
+  enableScroll(false);
 }
-function closePolicy() { document.getElementById('policyOverlay').classList.remove('show'); }
+function closePolicy() { document.getElementById('policyOverlay').classList.remove('show'); enableScroll(true);}
 function closePolicyOnBg(e) { if (e.target === document.getElementById('policyOverlay')) closePolicy(); }
 
 // ═══════ TOAST ═══════
