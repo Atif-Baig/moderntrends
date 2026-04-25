@@ -1088,8 +1088,7 @@ function addToCart(id) {
 	}
 	return false;
   }
-  // TODO: Check if available combination of stock is selected
-  alert(JSON.stringify(p.variantMatrix));
+  // Check if available combination of stock is selected
   if(p.variantMatrix && p.variantMatrix.length) {
 	if(p.colors && p.colors.length) {	   
 		if(p.sizes && p.sizes.length) {
@@ -1143,7 +1142,6 @@ function renderCart() {
     const thumb = item.images && item.images.length
       ? `<img src="${item.images[0]}" alt="${item.name}" loading="lazy" onerror="this.parentNode.innerHTML='<span style=font-size:28px>${CAT_EMOJI[item.category]||""}</span>'">`
       : `<span style="font-size:28px;">${CAT_EMOJI[item.category] || ''}</span>`;
-	// alert(JSON.stringify(item));
     let html = `<div class="cart-item">
       <div class="cart-item-img">${thumb}</div>
       <div class="cart-item-info">
