@@ -744,12 +744,10 @@ function openImagePreview(src) {
 
   img.src = src;
   overlay.style.display = "flex";
-  enableScroll(false);
 }
 
 function closeImagePreview() {
   document.getElementById("overlay-img-container").style.display = "none";
-  enableScroll(true);
 }
 
 function enableScroll(enableFlag) {
