@@ -1423,6 +1423,11 @@ updateBadge();
       img.style.display = 'block';
     });
   }
- fixProductImages();
+  // If products load asynchronously, observe DOM changes	
+  const observer = new MutationObserver(() => {
+    fixProductImages();
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+</script>	
 </body>
 </html>
