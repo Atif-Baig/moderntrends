@@ -1,0 +1,11 @@
+{
+  "theme": "theme-spring",
+  "items": [
+    {
+      "tag": "Edit Sale",
+      "tagClass": "tag-sale",
+      "text": "Holiday Gift Bundles from <span class=\"ticker-highlight\">$29</span> — free gift wrap included",
+      "cta": "Gift guide"
+    }
+  ]
+}
