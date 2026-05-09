@@ -1,11 +1,17 @@
 {
-  "theme": "theme-spring",
+  "theme": "theme-flash",
   "items": [
     {
       "tag": "Eid Sale",
       "tagClass": "tag-season",
       "text": "Holiday Gift Bundles from <span class=\"ticker-highlight\">$29</span> — free gift wrap included",
       "cta": "Gift guide"
+    },
+    {
+      "tag": "Sale",
+      "tagClass": "tag-limited",
+      "text": "Members save <span class=\"ticker-highlight\">15%</span> on every order",
+      "cta": "Join free"
     }
   ]
 }
