@@ -801,8 +801,7 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 /* === REVOLVING COMETS along the ellipses ===
    Two SVG circles drawn into the stage's elliptical containers.
    We dash the stroke so most of it is invisible and one bright
-   segment travels around the perimeter via stroke-dashoffset.
-   A subtle radial filter glow makes each comet feel emissive. */
+   segment travels around the perimeter via stroke-dashoffset. */
 .hero-comet {
   position: absolute;
   pointer-events: none;
@@ -819,15 +818,12 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 .hero-comet circle {
   fill: none;
   stroke-linecap: round;
-  /* SVG renders the circle scaled into a non-square viewBox as an ellipse,
-     so the stroke naturally follows the stage's elliptical proportions. */
 }
 .hero-comet--outer circle {
   stroke: #C9A96E;
   stroke-width: 1.4;
   filter: drop-shadow(0 0 6px rgba(201,169,110,0.95))
           drop-shadow(0 0 12px rgba(201,169,110,0.55));
-  /* path length normalized to 100; segment of ~14 lit, 86 gap */
   stroke-dasharray: 14 86;
   pathLength: 100;
   animation: heroCometOut 6.5s linear infinite;
@@ -849,6 +845,95 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
   /* opposite direction so the two comets cross paths */
   from { stroke-dashoffset: 0; }
   to   { stroke-dashoffset: 100; }
+}
+
+/* === GLITTERING TIP PARTICLES ===
+   A separate SVG layered on top of each comet hosts particles that
+   orbit at the same speed/direction as the stroke-dashoffset animation.
+   By rotating the whole SVG group in sync, the particles ride along
+   with the comet's leading edge. Because the parent .hero-comet sits
+   inside an elliptical container (preserveAspectRatio="none"), the
+   circular orbit in viewBox space stretches into the same ellipse the
+   stroke is tracing — so the glitter follows the comet perfectly.
+
+   Each particle has its own twinkle (scale + opacity) so the glitter
+   looks alive rather than rigid. */
+.hero-tip {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+}
+.hero-tip--outer {
+  inset: -4%;
+  transform: translateZ(-56px);  /* just in front of outer comet stroke */
+}
+.hero-tip--inner {
+  inset: 4%;
+  transform: translateZ(-96px);  /* just in front of inner comet stroke */
+}
+
+/* The rotating group — synchronised with the comet's stroke speed */
+.hero-tip__orbit {
+  transform-origin: 50px 50px;   /* viewBox center */
+  transform-box: view-box;
+}
+.hero-tip--outer .hero-tip__orbit {
+  /* matches heroCometOut: 6.5s clockwise */
+  animation: heroTipSpinCW 6.5s linear infinite;
+}
+.hero-tip--inner .hero-tip__orbit {
+  /* matches heroCometIn: 10s counter-clockwise */
+  animation: heroTipSpinCCW 10s linear infinite;
+}
+@keyframes heroTipSpinCW  { to { transform: rotate(360deg); } }
+@keyframes heroTipSpinCCW { to { transform: rotate(-360deg); } }
+
+/* Particles sit clustered around the leading point on the perimeter
+   (cx=100, cy=50 in viewBox = right-mid edge of the unrotated ellipse).
+   Each one twinkles independently for the shimmer effect. */
+.hero-tip__particle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroTipTwinkle 1.2s ease-in-out infinite;
+}
+.hero-tip--outer .hero-tip__particle {
+  fill: #FFE8A8;
+  filter: drop-shadow(0 0 3px #C9A96E) drop-shadow(0 0 6px rgba(201,169,110,0.8));
+}
+.hero-tip--inner .hero-tip__particle {
+  fill: #FFF4D6;
+  filter: drop-shadow(0 0 2.5px #E8D5B0) drop-shadow(0 0 5px rgba(232,213,176,0.7));
+}
+.hero-tip__particle:nth-child(1) { animation-delay: 0s;     }
+.hero-tip__particle:nth-child(2) { animation-delay: 0.18s; }
+.hero-tip__particle:nth-child(3) { animation-delay: 0.36s; }
+.hero-tip__particle:nth-child(4) { animation-delay: 0.54s; }
+.hero-tip__particle:nth-child(5) { animation-delay: 0.72s; }
+.hero-tip__particle:nth-child(6) { animation-delay: 0.9s;  }
+.hero-tip__particle:nth-child(7) { animation-delay: 1.05s; }
+
+@keyframes heroTipTwinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.6); }
+  50%      { opacity: 1;    transform: scale(1.4); }
+}
+
+/* Cross-shaped sparkle for the brightest "head" — a 4-pointed star
+   that briefly flashes large, like a lens flare riding the comet. */
+.hero-tip__star {
+  fill: #FFFFFF;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: heroTipStar 1.6s ease-in-out infinite;
+}
+.hero-tip--outer .hero-tip__star {
+  filter: drop-shadow(0 0 4px #FFE8A8) drop-shadow(0 0 10px #C9A96E);
+}
+.hero-tip--inner .hero-tip__star {
+  filter: drop-shadow(0 0 3px #FFF4D6) drop-shadow(0 0 8px #E8D5B0);
+}
+@keyframes heroTipStar {
+  0%, 100% { opacity: 0.4; transform: scale(0.7) rotate(0deg);   }
+  50%      { opacity: 1;   transform: scale(1.3) rotate(45deg);  }
 }
 
 /* The product image card */
@@ -1004,10 +1089,11 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .hero-scene { transform: none !important; }
-  .hero-ring-inner, .hero-badge, .hero-tag, .hero-sparkle, .hero-product-frame img, .hero-comet circle {
+  .hero-ring-inner, .hero-badge, .hero-tag, .hero-sparkle, .hero-product-frame img,
+  .hero-comet circle, .hero-tip__orbit, .hero-tip__particle, .hero-tip__star {
     animation: none !important;
   }
-  .hero-comet { display: none !important; }
+  .hero-comet, .hero-tip { display: none !important; }
 }
 
 </style>
@@ -1065,15 +1151,45 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
         <div class="hero-ring-inner"></div>
         <div class="hero-ring-outer"></div>
 
-        <!-- Revolving comets along the ellipses. SVG circles drawn into
-             non-square viewBoxes render as ellipses, and an animated
-             stroke-dashoffset traces a single bright segment around each
-             perimeter. Aria-hidden because purely decorative. -->
+        <!-- Revolving comets along the elliptical rings. The dashed
+             stroke + animated stroke-dashoffset traces a single bright
+             segment around each ellipse. -->
         <svg class="hero-comet hero-comet--outer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           <circle cx="50" cy="50" r="49.5" pathLength="100"/>
         </svg>
         <svg class="hero-comet hero-comet--inner" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           <circle cx="50" cy="50" r="49.5" pathLength="100"/>
+        </svg>
+
+        <!-- Glittering tip particles. The <g class="hero-tip__orbit">
+             rotates in sync with the matching comet's stroke animation,
+             carrying a cluster of twinkling particles around the ellipse
+             so they always appear at the comet's leading edge. -->
+        <svg class="hero-tip hero-tip--outer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <g class="hero-tip__orbit">
+            <!-- Main star "head" at the leading edge (right side, mid) -->
+            <path class="hero-tip__star" d="M 100 47 L 101.2 49.4 L 103.5 50 L 101.2 50.6 L 100 53 L 98.8 50.6 L 96.5 50 L 98.8 49.4 Z"/>
+            <!-- Trailing glitter particles -->
+            <circle class="hero-tip__particle" cx="100"   cy="50"   r="0.9"/>
+            <circle class="hero-tip__particle" cx="99.6"  cy="48.2" r="0.6"/>
+            <circle class="hero-tip__particle" cx="99.4"  cy="51.5" r="0.7"/>
+            <circle class="hero-tip__particle" cx="98.8"  cy="49.3" r="0.5"/>
+            <circle class="hero-tip__particle" cx="98.5"  cy="51"   r="0.55"/>
+            <circle class="hero-tip__particle" cx="98"    cy="50.2" r="0.5"/>
+            <circle class="hero-tip__particle" cx="97.3"  cy="49.6" r="0.4"/>
+          </g>
+        </svg>
+        <svg class="hero-tip hero-tip--inner" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <g class="hero-tip__orbit">
+            <path class="hero-tip__star" d="M 100 47.5 L 101 49.5 L 103 50 L 101 50.5 L 100 52.5 L 99 50.5 L 97 50 L 99 49.5 Z"/>
+            <circle class="hero-tip__particle" cx="100"   cy="50"   r="0.7"/>
+            <circle class="hero-tip__particle" cx="99.7"  cy="48.5" r="0.5"/>
+            <circle class="hero-tip__particle" cx="99.5"  cy="51.3" r="0.55"/>
+            <circle class="hero-tip__particle" cx="99"    cy="49.5" r="0.4"/>
+            <circle class="hero-tip__particle" cx="98.7"  cy="50.8" r="0.45"/>
+            <circle class="hero-tip__particle" cx="98.2"  cy="50.1" r="0.4"/>
+            <circle class="hero-tip__particle" cx="97.6"  cy="49.8" r="0.35"/>
+          </g>
         </svg>
 
         <div class="hero-product-frame">
