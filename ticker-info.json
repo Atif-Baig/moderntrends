@@ -3,7 +3,7 @@
   "items": [
     {
       "tag": "Eid Sale",
-      "tagClass": "tag-sale",
+      "tagClass": "tag-season",
       "text": "Holiday Gift Bundles from <span class=\"ticker-highlight\">$29</span> — free gift wrap included",
       "cta": "Gift guide"
     }
