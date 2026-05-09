@@ -38,7 +38,19 @@
   --shadow:0 4px 24px rgba(26,26,26,0.08);
   --shadow-hover:0 12px 40px rgba(26,26,26,0.16);
   --text3:rgba(255,255,255,.38);
+  --ticker-bg: #0d0d0d;
+  --ticker-text: #f5f0e8;
+  --ticker-accent: #e8c547;
+  --ticker-muted: rgba(245,240,232,0.45);
+  --ticker-divider: rgba(232,197,71,0.3);
+  --ticker-height-mobile: 40px;
+  --ticker-height-desktop: 44px;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+  --speed: 28s;
+  --pause-speed: 0s;
 }
+
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Montserrat',sans-serif;background:var(--warm-white);color:var(--charcoal);font-size:13px;letter-spacing:.02em;}
 
@@ -474,6 +486,207 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
   max-width: 90%;
   max-height: 90%;
 }
+
+/* ─── TICKER WRAPPER ─── */
+  .ticker-wrapper {
+    position: relative;
+    width: 100%;
+    background: var(--ticker-bg);
+    height: var(--ticker-height-mobile);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+    /* z-index: 100; */
+  }
+
+  /* Edge fade masks */
+  .ticker-wrapper::before,
+  .ticker-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 60px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .ticker-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, var(--ticker-bg) 0%, transparent 100%);
+  }
+  .ticker-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, var(--ticker-bg) 0%, transparent 100%);
+  }
+
+  /* ─── TICKER TRACK ─── */
+  .ticker-track {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    will-change: transform;
+    animation: ticker-scroll var(--speed) linear infinite;
+    gap: 0;
+  }
+
+  .ticker-track:hover,
+  .ticker-track:focus-within {
+    animation-play-state: paused;
+  }
+
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ─── TICKER ITEMS ─── */
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    position: relative;
+  }
+
+  .ticker-item:hover { opacity: 0.8; }
+
+  /* Divider dot between items */
+  .ticker-item::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--ticker-divider);
+    transform: translateX(50%);
+  }
+
+  /* Item tag badge */
+  .ticker-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    line-height: 1.4;
+  }
+
+  .tag-sale    { background: #e8c547; color: #0d0d0d; }
+  .tag-new     { background: #3ecf8e; color: #052e1e; }
+  .tag-flash   { background: #f06445; color: #fff; }
+  .tag-bundle  { background: #7c6ef5; color: #fff; }
+  .tag-free    { background: #e0e0e0; color: #0d0d0d; }
+  .tag-limited { background: #d94f4f; color: #fff; }
+  .tag-season  { background: #f5a623; color: #0d0d0d; }
+
+  .ticker-text {
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    color: var(--ticker-text);
+    line-height: 1;
+  }
+
+  .ticker-highlight {
+    color: var(--ticker-accent);
+    font-weight: 700;
+  }
+
+  .ticker-cta {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 400;
+    color: var(--ticker-muted);
+    letter-spacing: 0.06em;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin-left: 2px;
+  }
+
+  /* ─── SPEED CONTROLS (optional UI layer) ─── */
+  .ticker-controls {
+    position: absolute;
+    right: 12px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ctrl-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 9px;
+    transition: background 0.15s;
+    flex-shrink: 0;
+    padding: 0;
+  }
+  .ctrl-btn:hover { background: rgba(255,255,255,0.2); }
+  .ctrl-btn svg { width: 10px; height: 10px; fill: currentColor; }
+
+  /* ─── TICKER THEME VARIANTS ─── */
+  .ticker-wrapper.theme-summer { --ticker-bg: #ff6b35; --ticker-accent: #fff5c0; --ticker-muted: rgba(255,245,192,0.5); }
+  .ticker-wrapper.theme-holiday { --ticker-bg: #1a3a2a; --ticker-accent: #c8e85a; --ticker-muted: rgba(200,232,90,0.4); }
+  .ticker-wrapper.theme-flash   { --ticker-bg: #1c1c2e; --ticker-accent: #ff4ecd; --ticker-muted: rgba(255,78,205,0.4); }
+  .ticker-wrapper.theme-spring  { --ticker-bg: #f7e8f0; --ticker-accent: #d63384; --ticker-text: #2d1a24; --ticker-muted: rgba(45,26,36,0.4); }
+  .ticker-wrapper.theme-bfcm    { --ticker-bg: #0a0a0a; --ticker-accent: #f5c800; --ticker-muted: rgba(245,200,0,0.4); }
+  .ticker-wrapper.theme-winter  { --ticker-bg: #1e2d4a; --ticker-accent: #98d4f0; --ticker-muted: rgba(152,212,240,0.4); }
+
+  /* Code preview box */
+  .code-preview {
+    width: 100%;
+    max-width: 720px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 20px 24px;
+    overflow-x: auto;
+  }
+
+  .code-preview pre {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #c8d3e0;
+    line-height: 1.7;
+    white-space: pre;
+  }
+
+  .code-kw { color: #ff79c6; }
+  .code-str { color: #f1fa8c; }
+  .code-comment { color: #6272a4; }
+
+  @media (min-width: 640px) {
+    .ticker-wrapper {
+      height: var(--ticker-height-desktop);
+    }
+    .ticker-text { font-size: 12.5px; }
+    .ticker-tag { font-size: 9.5px; }
+    .ticker-item { padding: 0 28px; }
+
+    .ticker-wrapper::before,
+    .ticker-wrapper::after { width: 100px; }
+  }
+
+  @media (min-width: 1024px) {
+    .ticker-item { padding: 0 36px; }
+    .ticker-text { font-size: 13px; }
+  }
 </style>
 </head>
 <body>
@@ -494,7 +707,21 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
     <button class="cart-btn" onclick="openCart()">Cart <span class="cart-badge" id="cartBadge">0</span></button>
   </div>
 </nav>
+<!-- ═══════════════════════════════════════════
+ LIVE TICKER — swap data-theme to change look
+ ═══════════════════════════════════════════ -->
+<div class="ticker-wrapper" id="ticker" role="marquee" aria-live="off" aria-label="Promotions and offers">
 
+  <div class="ticker-controls">
+	<button class="ctrl-btn" id="toggleBtn" title="Pause / Play" aria-label="Pause ticker">
+	  <svg viewBox="0 0 10 10"><rect x="1" y="1" width="3" height="8"/><rect x="6" y="1" width="3" height="8"/></svg>
+	</button>
+  </div>
+
+  <div class="ticker-track" id="tickerTrack">
+	<!-- JS fills this -->
+  </div>
+</div>
 <div class="hero">
   <div class="hero-eyebrow">Curated Fashion &middot; Quality You Can Feel</div>
   <h1>Elegant <em>Style</em><br>&amp; Timeless <em>Jewels</em></h1>
@@ -504,9 +731,8 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
       <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:white;flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       Chat on WhatsApp
     </a>
-  </div>
+  </div>	
 </div>
-
 <div class="search-banner" id="searchBanner">
   <div class="search-banner-text">Showing results for: <strong id="searchBannerTerm"></strong></div>
   <button class="search-clear-all" onclick="clearSearch()">Clear search</button>
@@ -526,7 +752,6 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
     <option value="name-asc">Name: A to Z</option>
   </select>
 </div>
-
 <div class="shop-main">
   <div id="loadingBanner">Loading products...</div>
   <div class="section-title" id="sectionTitle"></div>
@@ -689,6 +914,7 @@ const WA_NUMBER = '9126952475';
 const SITE_URL  = 'https://www.modern-trends.com/';
 // CSV hosted on GitHub — update this URL once uploaded:
 const CSV_URL   = 'products.csv';
+const TICKER_JSON_URL   = 'ticker-info.json';
 // Fallback emoji per category if images fail
 const CAT_EMOJI = {clothing:'&#128247;', jewelry:'&#128142;', accessories:'&#128092;'};
 
@@ -1438,6 +1664,89 @@ const observer = new MutationObserver(() => {
 fixProductImages();
 });
 observer.observe(document.body, { childList: true, subtree: true });
+
+
+/* ─────────────────────────────────────────────
+   STATE
+   ───────────────────────────────────────────── */
+let currentOccasion = null;
+let isPaused = false;
+
+
+/* ─────────────────────────────────────────────
+   BUILD TICKER ITEMS
+   ───────────────────────────────────────────── */
+function buildTickerHTML(items) {
+  // Duplicate for seamless loop
+  const allItems = [...items, ...items];
+  return allItems.map(item => `
+    <span class="ticker-item" role="listitem">
+      <span class="ticker-tag ${item.tagClass}">${item.tag}</span>
+      <span class="ticker-text">${item.text}</span>
+      ${item.cta ? `<span class="ticker-cta">${item.cta} →</span>` : ''}
+    </span>
+  `).join('');
+}
+
+/* ─────────────────────────────────────────────
+   RENDER TICKER
+   ───────────────────────────────────────────── */
+function renderTicker(occasion) {
+  const wrapper = document.getElementById('ticker');
+  const track = document.getElementById('tickerTrack');
+
+  // Theme
+  wrapper.className = 'ticker-wrapper ' + (occasion.theme || '');
+
+  // Content
+  track.innerHTML = buildTickerHTML(occasion.items);
+
+  // Reset animation
+  track.style.animation = 'none';
+  track.offsetHeight; // reflow
+  track.style.animation = '';
+}
+
+/* ─────────────────────────────────────────────
+   PAUSE / PLAY BUTTON
+   ───────────────────────────────────────────── */
+document.getElementById('toggleBtn').addEventListener('click', () => {
+  isPaused = !isPaused;
+  const track = document.getElementById('tickerTrack');
+  track.style.animationPlayState = isPaused ? 'paused' : 'running';
+  const btn = document.getElementById('toggleBtn');
+  btn.setAttribute('aria-label', isPaused ? 'Play ticker' : 'Pause ticker');
+  btn.innerHTML = isPaused
+    ? `<svg viewBox="0 0 10 10" fill="currentColor"><polygon points="2,1 9,5 2,9"/></svg>`
+    : `<svg viewBox="0 0 10 10" fill="currentColor"><rect x="1" y="1" width="3" height="8"/><rect x="6" y="1" width="3" height="8"/></svg>`;
+});
+
+/* ─────────────────────────────────────────────
+   INIT
+   ───────────────────────────────────────────── */
+// ═══════ LOAD TICKER DATA ═══════
+async function initTickerBanner() {
+  document.getElementById('loadingBanner').style.display = 'block';
+  try {
+    const res = await fetch(TICKER_JSON_URL + '?_=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    currentOccasion = await res.json();
+	if(currentOccasion != null) {
+		renderTicker(currentOccasion);
+
+		/* Reduced motion respect */
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		  document.getElementById('tickerTrack').style.animationPlayState = 'paused';
+		}
+	}
+  } catch(e) {     
+    // Fallback inline data so site always works
+	console.log(e);
+    currentOccasion = null;
+  }
+  document.getElementById('loadingBanner').style.display = 'none';
+}
+initTickerBanner();
 </script>
 </body>
 </html>
