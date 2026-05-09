@@ -798,6 +798,59 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
   to { transform: translateZ(-100px) rotate(360deg); }
 }
 
+/* === REVOLVING COMETS along the ellipses ===
+   Two SVG circles drawn into the stage's elliptical containers.
+   We dash the stroke so most of it is invisible and one bright
+   segment travels around the perimeter via stroke-dashoffset.
+   A subtle radial filter glow makes each comet feel emissive. */
+.hero-comet {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+}
+.hero-comet--outer {
+  inset: -4%;            /* matches .hero-ring-outer */
+  transform: translateZ(-58px);
+}
+.hero-comet--inner {
+  inset: 4%;             /* matches .hero-ring-inner */
+  transform: translateZ(-98px);
+}
+.hero-comet circle {
+  fill: none;
+  stroke-linecap: round;
+  /* SVG renders the circle scaled into a non-square viewBox as an ellipse,
+     so the stroke naturally follows the stage's elliptical proportions. */
+}
+.hero-comet--outer circle {
+  stroke: #C9A96E;
+  stroke-width: 1.4;
+  filter: drop-shadow(0 0 6px rgba(201,169,110,0.95))
+          drop-shadow(0 0 12px rgba(201,169,110,0.55));
+  /* path length normalized to 100; segment of ~14 lit, 86 gap */
+  stroke-dasharray: 14 86;
+  pathLength: 100;
+  animation: heroCometOut 6.5s linear infinite;
+}
+.hero-comet--inner circle {
+  stroke: #E8D5B0;
+  stroke-width: 1;
+  filter: drop-shadow(0 0 5px rgba(232,213,176,0.85))
+          drop-shadow(0 0 10px rgba(232,213,176,0.45));
+  stroke-dasharray: 9 91;
+  pathLength: 100;
+  animation: heroCometIn 10s linear infinite;
+}
+@keyframes heroCometOut {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -100; }
+}
+@keyframes heroCometIn {
+  /* opposite direction so the two comets cross paths */
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: 100; }
+}
+
 /* The product image card */
 .hero-product-frame {
   position: absolute;
@@ -951,9 +1004,10 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .hero-scene { transform: none !important; }
-  .hero-ring-inner, .hero-badge, .hero-tag, .hero-sparkle, .hero-product-frame img {
+  .hero-ring-inner, .hero-badge, .hero-tag, .hero-sparkle, .hero-product-frame img, .hero-comet circle {
     animation: none !important;
   }
+  .hero-comet { display: none !important; }
 }
 
 </style>
@@ -1010,6 +1064,17 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
         <div class="hero-halo"></div>
         <div class="hero-ring-inner"></div>
         <div class="hero-ring-outer"></div>
+
+        <!-- Revolving comets along the ellipses. SVG circles drawn into
+             non-square viewBoxes render as ellipses, and an animated
+             stroke-dashoffset traces a single bright segment around each
+             perimeter. Aria-hidden because purely decorative. -->
+        <svg class="hero-comet hero-comet--outer" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <circle cx="50" cy="50" r="49.5" pathLength="100"/>
+        </svg>
+        <svg class="hero-comet hero-comet--inner" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <circle cx="50" cy="50" r="49.5" pathLength="100"/>
+        </svg>
 
         <div class="hero-product-frame">
           <img class="hero-image-3d"
