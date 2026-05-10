@@ -25,15 +25,6 @@
 <meta name="twitter:description" content="Shop curated fashion by Saima.B. Clothing, jewelry & accessories. Order via WhatsApp for personal service.">
 <meta name="twitter:image" content="https://www.modern-trends.com/og-image.jpg">
 <meta name="twitter:image:alt" content="Modern Trends fashion boutique">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-01478ELRJ1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-01478ELRJ1');
-</script>	
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://www.modern-trends.com/#organization","name":"Modern Trends by Saima.B","url":"https://www.modern-trends.com/","logo":"https://www.modern-trends.com/logo.png","description":"Modern Trends is an online fashion boutique specialising in curated clothing, jewelry and accessories for the modern wardrobe.","contactPoint":{"@type":"ContactPoint","telephone":"+919126952475","email":"moderntrendssa5@gmail.com","contactType":"customer service","availableLanguage":["English","Urdu"]},"sameAs":["https://www.instagram.com/moderntrendsbysaima_b","https://www.tiktok.com/@moderntrendsbysaima.b","https://www.facebook.com/people/Modern-Trends/61556092210520/"]},{"@type":"WebSite","@id":"https://www.modern-trends.com/#website","url":"https://www.modern-trends.com/","name":"Modern Trends","publisher":{"@id":"https://www.modern-trends.com/#organization"},"potentialAction":{"@type":"SearchAction","target":"https://www.modern-trends.com/?search={search_term_string}","query-input":"required name=search_term_string"}},{"@type":"Store","name":"Modern Trends by Saima.B","url":"https://www.modern-trends.com/","description":"Curated clothing, jewelry and accessories. Order via WhatsApp.","telephone":"+919126952475","email":"moderntrendssa5@gmail.com","priceRange":"$-$$$","paymentAccepted":"WhatsApp Order","sameAs":["https://www.instagram.com/moderntrendsbysaima_b","https://www.tiktok.com/@moderntrendsbysaima.b","https://www.facebook.com/people/Modern-Trends/61556092210520/"]}]}
 </script>
@@ -134,7 +125,11 @@ nav{position:sticky;top:0;z-index:100;background:var(--warm-white);border-bottom
 .slider-dot.active{background:white;}
 
 .product-info{padding:14px 16px;}
-.product-code{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;font-weight:500;}
+.product-code-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px;}
+.product-code{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500;}
+.product-video-btn{background:none;border:none;padding:0;cursor:pointer;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;line-height:0;transition:color .2s,transform .2s;}
+.product-video-btn:hover{color:var(--gold);transform:scale(1.12);}
+.product-video-btn svg{width:18px;height:14px;display:block;}
 .product-category{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
 .product-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:400;line-height:1.2;margin-bottom:5px;color:var(--charcoal);}
 .product-desc{font-size:10px;color:var(--muted);line-height:1.55;margin-bottom:12px;}
@@ -494,6 +489,52 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 #overlay-img-container img {
   max-width: 90%;
   max-height: 90%;
+}
+
+/* ─── YOUTUBE VIDEO POPUP ─── */
+#yt-modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.92);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+  padding:20px;
+}
+#yt-modal-overlay.show{display:flex;}
+#yt-modal-content{
+  position:relative;
+  width:95vw;
+  max-width:1280px;
+  aspect-ratio:16/9;
+  max-height:90vh;
+  background:#000;
+  box-shadow:0 12px 48px rgba(0,0,0,.6);
+}
+#yt-modal-content iframe{
+  width:100%;
+  height:100%;
+  border:0;
+  display:block;
+}
+#yt-close-btn{
+  position:absolute;
+  top:-44px;
+  right:-4px;
+  background:none;
+  border:none;
+  color:rgba(255,255,255,0.85);
+  font-size:28px;
+  line-height:1;
+  cursor:pointer;
+  padding:6px 10px;
+  transition:color .2s;
+  font-family:inherit;
+}
+#yt-close-btn:hover{color:var(--gold);}
+@media(max-width:600px){
+  #yt-close-btn{top:-38px;font-size:24px;}
 }
 
 /* ─── TICKER WRAPPER ─── */
@@ -1296,6 +1337,12 @@ footer{background:var(--charcoal);color:rgba(255,255,255,.5);margin-top:60px;}
 <div id="overlay-img-container" onclick="closeImagePreview()">
   <img id="overlay-img">
 </div>
+<div id="yt-modal-overlay" onclick="ytBackdropClick(event)">
+  <div id="yt-modal-content">
+    <button id="yt-close-btn" onclick="closeYouTubeModal()" aria-label="Close video">&#10005;</button>
+    <iframe id="yt-iframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div>
 <div class="sidebar" id="cartSidebar">
   <div class="sidebar-header"><h2>Your Cart<button class="remove-item" onclick="emptyCart()" style="margin-left:10px;color:red;">[Remove All]</button><button class="remove-item" onclick="closeCart()" style="margin-left:10px;color:green;">[Continue Shopping]</button></h2><button class="close-btn"  onclick="closeCart()">&#x2715;</button></div>
   <div class="cart-items" id="cartItems"></div>
@@ -1472,6 +1519,48 @@ function closeImagePreview() {
   document.getElementById("overlay-img-container").style.display = "none";
 }
 
+// ═══════ YOUTUBE VIDEO POPUP ═══════
+function extractYouTubeId(url) {
+  if (!url) return '';
+  const m = String(url).match(
+    /(?:youtube\.com\/(?:watch\?(?:[^&]*&)*v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return m ? m[1] : '';
+}
+
+function openYouTubeModal(productId) {
+  const p = products.find(x => x.id === productId);
+  if (!p || !p.youtubeVideoLink) return;
+  const videoId = extractYouTubeId(p.youtubeVideoLink);
+  if (!videoId) return;
+  const iframe  = document.getElementById('yt-iframe');
+  const overlay = document.getElementById('yt-modal-overlay');
+  iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
+  overlay.classList.add('show');
+  document.body.classList.add('no-scroll');
+}
+
+function closeYouTubeModal() {
+  const iframe  = document.getElementById('yt-iframe');
+  const overlay = document.getElementById('yt-modal-overlay');
+  if (!overlay.classList.contains('show')) return;
+  iframe.src = '';                       // stops playback
+  overlay.classList.remove('show');
+  document.body.classList.remove('no-scroll');
+}
+
+function ytBackdropClick(e) {
+  // Close only when the click is on the dark backdrop, not on the video box itself
+  if (e.target.id === 'yt-modal-overlay') closeYouTubeModal();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const overlay = document.getElementById('yt-modal-overlay');
+    if (overlay && overlay.classList.contains('show')) closeYouTubeModal();
+  }
+});
+
 function enableScroll(enableFlag) {
     const body = document.querySelector('body');
     if(enableFlag) {
@@ -1499,7 +1588,8 @@ function csvToProducts(rows) {
 	sizes: pipe(r.sizes),
 	types: pipe(r.types),
 	weights: pipe(r.weights),
-	variantMatrix: r.variant_matrix ? parseVariantMatrix(s(r.variant_matrix)) : []
+	variantMatrix: r.variant_matrix ? parseVariantMatrix(s(r.variant_matrix)) : [],
+	youtubeVideoLink: r.youtube_video_link || ''
   }));
 }
 
@@ -1734,7 +1824,10 @@ function renderProducts() {
         ${sliderHtml}
       </div>
       <div class="product-info">
-        <div class="product-code">${p.code}</div>
+        <div class="product-code-row">
+          <div class="product-code">${p.code}</div>
+          ${p.youtubeVideoLink ? `<button class="product-video-btn" title="Watch video" aria-label="Watch product video" onclick="openYouTubeModal(${p.id})"><svg viewBox="0 0 24 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M2 2h13a2 2 0 0 1 2 2v2.5l4.4-3.1a.6.6 0 0 1 .95.49v10.22a.6.6 0 0 1-.95.49L17 11.5V14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/></svg></button>` : ''}
+        </div>
         <div class="product-category">${p.category}</div>
         <div class="product-name">${p.name}</div>
         <div class="product-desc">${descHtml}</div>
