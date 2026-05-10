@@ -127,9 +127,49 @@ nav{position:sticky;top:0;z-index:100;background:var(--warm-white);border-bottom
 .product-info{padding:14px 16px;}
 .product-code-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:3px;}
 .product-code{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:500;}
-.product-video-btn{background:none;border:none;padding:0;cursor:pointer;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;line-height:0;transition:color .2s,transform .2s;}
-.product-video-btn:hover{color:var(--gold);transform:scale(1.12);}
-.product-video-btn svg{width:18px;height:14px;display:block;}
+.product-video-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:var(--gold);
+  color:#fff;
+  border:none;
+  padding:5px 10px 5px 9px;
+  border-radius:2px;
+  font-family:'Montserrat',sans-serif;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:background .25s ease,color .25s ease,transform .25s ease;
+  animation:wv-pulse 2.4s ease-in-out infinite;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.product-video-btn:hover{
+  background:var(--charcoal);
+  color:#fff;
+  transform:translateY(-1px);
+  animation:none;
+}
+.product-video-btn:active{transform:translateY(0) scale(.98);}
+.product-video-btn .pv-icon{
+  width:8px;
+  height:9px;
+  display:block;
+  flex-shrink:0;
+  transition:transform .25s ease;
+}
+.product-video-btn:hover .pv-icon{transform:scale(1.15);}
+@keyframes wv-pulse{
+  0%   {box-shadow:0 0 0 0 rgba(201,169,110,.55);}
+  60%  {box-shadow:0 0 0 7px rgba(201,169,110,0);}
+  100% {box-shadow:0 0 0 0 rgba(201,169,110,0);}
+}
+@media (prefers-reduced-motion: reduce){
+  .product-video-btn{animation:none;}
+}
 .product-category{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
 .product-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:400;line-height:1.2;margin-bottom:5px;color:var(--charcoal);}
 .product-desc{font-size:10px;color:var(--muted);line-height:1.55;margin-bottom:12px;}
@@ -1826,7 +1866,7 @@ function renderProducts() {
       <div class="product-info">
         <div class="product-code-row">
           <div class="product-code">${p.code}</div>
-          ${p.youtubeVideoLink ? `<button class="product-video-btn" title="Watch video" aria-label="Watch product video" onclick="openYouTubeModal(${p.id})"><svg viewBox="0 0 24 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M2 2h13a2 2 0 0 1 2 2v2.5l4.4-3.1a.6.6 0 0 1 .95.49v10.22a.6.6 0 0 1-.95.49L17 11.5V14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/></svg></button>` : ''}
+          ${p.youtubeVideoLink ? `<button class="product-video-btn" title="Watch product video" aria-label="Watch product video" onclick="openYouTubeModal(${p.id})"><svg class="pv-icon" viewBox="0 0 10 10" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M2 1 L9 5 L2 9 Z"/></svg>Watch Video</button>` : ''}
         </div>
         <div class="product-category">${p.category}</div>
         <div class="product-name">${p.name}</div>
